@@ -1,0 +1,69 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") 
+}
+
+model Player {
+  id                Int      @id @default(autoincrement())
+  fullName          String
+  birthDate         DateTime
+  nationality       String
+  city              String
+  province          String
+  height            String
+  weight            String
+  dominantFoot      String
+  transferStatus    String
+  mainPosition      String
+  secondaryPositions String[] // Array de strings
+  profileSummary    String
+  currentLevel      String?    // Opcional
+  objective         String
+  image             String?     // Opcional
+  videoUrl          String?     // Opcional
+  scoutingStatus    String?     // Opcional
+  clubsInterested   String[]    // Array de strings
+  clubsHistory      String[]   // Opcional array de strings
+  statsId      Int      @unique
+  stats        Stats    @relation(fields: [statsId], references: [id])
+  skillsId     Int      @unique
+  skills       Skills   @relation(fields: [skillsId], references: [id])
+  achievements      String[]  // Opcional array de strings
+}
+
+// Definimos Stats como tabla aparte para mantener la estructura clara
+model Stats {
+  id            Int    @id @default(autoincrement())
+  season        String
+  matches       Int
+  goals         Int
+  assists       Int
+  yellowCards   Int
+  redCards      Int
+  goalsReceived Int
+  cleanSheets   Int
+  player        Player?
+}
+
+// Definimos Skills como tabla aparte para mantener la estructura clara
+model Skills {
+  id            Int     @id @default(autoincrement())
+  technique     Int
+  speed         Int
+  strength      Int
+  vision        Int
+  finishing     Int
+  passing       Int
+  reflexes      Int
+  crossHandling Int
+  oneOnOnes     Int
+  footWork      Int
+  leadership    Int
+  kickingPower  Int
+  player        Player?
+}
