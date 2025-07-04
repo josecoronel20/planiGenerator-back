@@ -15,6 +15,6 @@ export async function readCredentials(): Promise<Credentials> {
     return JSON.parse(data);
   } catch (error) {
     console.error("Error al leer el archivo:", error);
-    return { username: "", password: "" } as Credentials;
+    return { email: "", password: "" } as Credentials;
   }
 }
