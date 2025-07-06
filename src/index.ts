@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 // Configuración de CORS
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://chapel-front.vercel.app/"],
+    origin: ["http://localhost:3000", "https://chapel-front.vercel.app"],
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type",
     credentials: true,
