@@ -39,9 +39,9 @@ router.post("/login", async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 30,
-        sameSite: "lax",
+        sameSite: "none",
       })
       .status(200)
       .json({ message: "Authentication successful" });
