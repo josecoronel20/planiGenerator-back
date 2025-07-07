@@ -36,15 +36,14 @@ router.post("/login", async (req, res) => {
       expiresIn: "30d",
     });
 
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        sameSite: "none",
-      })
-      .status(200)
-      .json({ message: "Authentication successful" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    });
+
+    res.status(200).json({ message: "Authentication successful" });
   } catch (err) {
     console.log("Login error:", err);
     res.status(500).json({ message: "Internal server error" });
