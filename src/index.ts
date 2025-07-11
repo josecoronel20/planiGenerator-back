@@ -1,22 +1,16 @@
 import express from "express";
-import players from "./routes/players";
-import admin from "./routes/admin";
-import supabaseFiles from "./routes/supabaseFiles";
+import auth from "./routes/auth";
+import planiGenerator from "./routes/planiGenerator";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 dotenv.config();
 
 const app = express();
-
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-
 // Configuración de CORS
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://chapel-front.vercel.app"],
+    origin: ["http://localhost:3000"],
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type",
     credentials: true,
@@ -30,15 +24,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Rutas
-// Rutas de players
-app.use("/players", players);
+// Rutas de auth
+app.use("/auth", auth);
+// Rutas de planiGenerator
+app.use("/planiGenerator", planiGenerator);
 
-// Rutas de admin
-app.use("/admin", admin);
-
-// Rutas de supabaseFiles
-app.use("/supabaseFiles", supabaseFiles);
-
-app.listen(3001, () => {
-  console.log("Servidor corriendo en puerto 3001");
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor corriendo en puerto ${process.env.PORT}`);
 });
