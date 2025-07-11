@@ -159,3 +159,4 @@ CORS_ORIGIN="http://localhost:3000"
 ---
 
 **Desarrollado con ❤️ para Chapel Club** # chapel-back
+# planiGenerator-back
