@@ -1,6 +1,7 @@
 import express from "express";
 import auth from "./routes/auth";
 import planiGenerator from "./routes/planiGenerator";
+import user from "./routes/user";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -28,6 +29,8 @@ app.use(cookieParser());
 app.use("/auth", auth);
 // Rutas de planiGenerator
 app.use("/planiGenerator", planiGenerator);
+// Rutas de user
+app.use("/user", user);
 
 app.listen(process.env.PORT, () => {
   console.log(`Servidor corriendo en puerto ${process.env.PORT}`);

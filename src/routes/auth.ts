@@ -4,12 +4,13 @@ import {
   credentialsLoginSchema,
   credentialsRegisterSchema,
 } from "../utils/credentialsSchema";
-import { Credentials, CredentialsRegister } from "../utils/types";
-import { readCredentials, writeCredentials } from "../utils/jsonFileHandler";
+import { Credentials, CredentialsRegister, User } from "../utils/types";
+import { readCredentials, writeCredentials } from "../utils/credentialHandler";
 import bcrypt from "bcrypt";
 
 const router = Router();
 
+//register
 router.post("/register", async (req, res) => {
   const { error: zodError } = credentialsRegisterSchema.safeParse(req.body);
   if (zodError) {
@@ -33,12 +34,12 @@ router.post("/register", async (req, res) => {
       email,
       password: hashedPassword,
       username,
-      planification:null
+      planification:undefined
     };
 
-    users.push(newUser);
+    users.push(newUser as User);
 
-    await writeCredentials(users);
+    await writeCredentials(users as Credentials[]);
 
     return res
       .status(201)
@@ -49,6 +50,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+//login
 router.post("/login", async (req, res) => {
   const { error: zodError } = credentialsLoginSchema.safeParse(req.body);
   if (zodError) {
@@ -89,6 +91,7 @@ router.post("/login", async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24,
     });
+    
 
     res.status(200).json({ message: "Login successful" });
   } catch (err) {
@@ -103,29 +106,6 @@ router.post("/logout", async (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 });
 
-router.get("/me", async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    console.log("Unauthorized: No token");
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: number };
 
-  if (!decoded) {
-    console.log("Unauthorized: No decoded");
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const users = await readCredentials();
-
-  const user = users.find((user) => user.id === decoded.id);
-
-  if (!user) {
-    console.log("Unauthorized: No user");
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  res.status(200).json({ user: user });
-});
 
 export default router;

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { readCredentials, writeCredentials } from "../utils/jsonFileHandler";
+import { readCredentials, writeCredentials } from "../utils/credentialHandler";
 import jwt from "jsonwebtoken";
 
 const router = Router();
