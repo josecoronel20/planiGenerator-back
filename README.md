@@ -1,70 +1,55 @@
-# 🏆 Chapel Backend API
 
-Backend REST API para gestión de jugadores del Club Chapel. Desarrollado con **Node.js**, **Express**, **TypeScript** y **Prisma**.
+## �� API Endpoints
 
-## 🚀 Tecnologías Principales
-
-- **Runtime**: Node.js + TypeScript
-- **Framework**: Express.js
-- **ORM**: Prisma + PostgreSQL
-- **Autenticación**: JWT + bcrypt
-- **Validación**: Zod
-- **Seguridad**: CORS, HTTP-only cookies
-
-## 📊 Características Destacadas
-
-- ✅ **CRUD completo** para jugadores con validación
-- 🔐 **Autenticación JWT** con middleware de seguridad
-- 📈 **Base de datos relacional** con Prisma ORM
-- 🛡️ **Validación de datos** con esquemas Zod
-- 🍪 **Cookies seguras** para manejo de tokens
-- 📝 **Logging** para debugging y monitoreo
-
-## 🏗️ Arquitectura
-
-```
-backend/
-├── src/
-│   ├── routes/          # API endpoints
-│   ├── middleware/      # Auth middleware
-│   ├── utils/           # Helpers & types
-│   └── index.ts         # Server entry
-├── prisma/
-│   └── schema.prisma    # Database schema
-└── package.json
-```
-
-## 🔌 API Endpoints
-
+### Autenticación (`/auth`)
 | Método | Endpoint | Descripción | Auth |
 |--------|----------|-------------|------|
-| GET | `/players` | Listar jugadores | ❌ |
-| GET | `/players/:id` | Obtener jugador | ❌ |
-| POST | `/players` | Crear jugador | ✅ |
-| PUT | `/players/:id` | Actualizar jugador | ✅ |
-| DELETE | `/players/:id` | Eliminar jugador | ✅ |
-| POST | `/admin/login` | Autenticación | ❌ |
+| POST | `/register` | Registrar nuevo usuario | ❌ |
+| POST | `/login` | Iniciar sesión | ❌ |
+| POST | `/logout` | Cerrar sesión | ✅ |
 
-## 🗄️ Modelos de Base de Datos
+### Usuarios (`/user`)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/me` | Obtener datos del usuario actual | ✅ |
+| PUT | `/update` | Actualizar planificación del usuario | ✅ |
 
-```prisma
-model Player {
-  id                Int      @id @default(autoincrement())
-  fullName          String
-  birthDate         DateTime
-  nationality       String
-  mainPosition      String
-  secondaryPositions String[]
-  profileSummary    String
-  objective         String
-  statsId           Int      @unique
-  stats             Stats    @relation(fields: [statsId], references: [id])
-  skillsId          Int      @unique
-  skills            Skills   @relation(fields: [skillsId], references: [id])
-}
+### Planificaciones (`/planiGenerator`)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/` | Generar nueva planificación | ✅ |
+
+## 🗄️ Modelos de Datos
+
+### Usuario
+```typescript
+type User = {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  planning?: planning;
+};
 ```
 
-## 🚀 Instalación Rápida
+### Ejercicio
+```typescript
+type Exercise = {
+  id: string;
+  exercise: string;
+  sets: number[];
+  wheight: number;
+};
+```
+
+### Planificación
+```typescript
+type planning = {
+  [day: string]: Exercise[];
+};
+```
+
+## �� Instalación Rápida
 
 ```bash
 # Instalar dependencias
@@ -73,44 +58,16 @@ npm install
 # Configurar variables de entorno
 cp .env.example .env
 
-# Configurar base de datos
-npx prisma generate
-npx prisma migrate dev
-
 # Ejecutar en desarrollo
 npm run dev
 ```
 
-## 🔐 Autenticación
+## 🔐 Variables de Entorno
 
-- **JWT tokens** almacenados en cookies HTTP-only
-- **Middleware de protección** para rutas sensibles
-- **Validación de credenciales** con bcrypt
-- **Expiración automática** de tokens (1 hora)
-
-## 📈 Funcionalidades Clave
-
-### Validación de Duplicados
-```typescript
-// Verifica jugadores existentes por nombre y fecha
-const playerExists = await prisma.player.findFirst({
-  where: {
-    AND: [
-      { fullName: { contains: fullName, mode: "insensitive" } },
-      { birthDate: new Date(birthDate) }
-    ]
-  }
-});
-```
-
-### Manejo de Errores
-```typescript
-try {
-  const player = await prisma.player.create({ data });
-  res.status(201).json({ message: "Jugador creado correctamente" });
-} catch (error) {
-  res.status(500).json({ message: "Error al crear el jugador" });
-}
+```env
+PORT=3001
+JWT_SECRET=tu_jwt_secret_super_seguro
+NODE_ENV=development
 ```
 
 ## 🛠️ Scripts Disponibles
@@ -123,41 +80,79 @@ try {
 }
 ```
 
-## 🔧 Variables de Entorno
+## 🔐 Autenticación
 
-```env
-DATABASE_URL="postgresql://..."
-JWT_SECRET="tu_jwt_secret"
-CORS_ORIGIN="http://localhost:3000"
+- **JWT tokens** almacenados en cookies HTTP-only
+- **Verificación automática** en rutas protegidas
+- **Validación de credenciales** con bcrypt
+- **Expiración automática** de tokens (1 día)
+
+## �� Funcionalidades Clave
+
+### Validación de Datos
+```typescript
+// Esquemas Zod para validación
+const credentialsLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1).max(20)
+});
 ```
+
+### Manejo de Errores
+```typescript
+try {
+  const user = await readCredentials();
+  res.status(200).json(user);
+} catch (error) {
+  res.status(500).json({ message: "Error interno" });
+}
+```
+
+### Seguridad
+- **CORS configurado** para frontend específico
+- **Cookies seguras** con httpOnly
+- **Passwords hasheados** con bcrypt
+- **Validación de tokens** en cada request
 
 ## 📊 Métricas del Proyecto
 
-- **Líneas de código**: ~500
-- **Endpoints**: 7
-- **Modelos de BD**: 3
-- **Middleware**: 1
-- **Validaciones**: 2 esquemas Zod
+- **Líneas de código**: ~400
+- **Endpoints**: 6
+- **Tipos TypeScript**: 4
+- **Esquemas de validación**: 2
+- **Archivos de utilidades**: 4
 
-## 🎯 Logros Técnicos
+## �� Logros Técnicos
 
 - ✅ **Type Safety** completo con TypeScript
 - ✅ **Validación robusta** con Zod
 - ✅ **Seguridad implementada** con JWT y cookies
 - ✅ **Arquitectura escalable** con separación de responsabilidades
-- ✅ **Documentación** completa de API
 - ✅ **Manejo de errores** consistente
+- ✅ **Almacenamiento persistente** con JSON
 
 ## 🚀 Próximos Pasos
 
+- [ ] Migración a base de datos PostgreSQL
 - [ ] Tests unitarios con Jest
 - [ ] Documentación con Swagger
 - [ ] Rate limiting
 - [ ] Logging estructurado
 - [ ] Docker deployment
 
----
+## 🔧 Desarrollo
 
-**Desarrollado con ❤️ para Chapel Club** # chapel-back
-# planiGenerator-back
-# planiGenerator-back
+### Estructura de Archivos
+- **`src/index.ts`**: Configuración del servidor Express
+- **`src/routes/`**: Endpoints de la API
+- **`src/utils/`**: Utilidades y tipos
+- **`src/data/`**: Almacenamiento JSON
+
+### Flujo de Datos
+1. **Request** → Middleware (CORS, cookies, body parsing)
+2. **Validation** → Zod schemas
+3. **Authentication** → JWT verification
+4. **Business Logic** → User/planning operations
+5. **Response** → JSON response with status
+
+---

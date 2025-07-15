@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
       email,
       password: hashedPassword,
       username,
-      planification:undefined
+      planning:undefined
     };
 
     users.push(newUser as User);

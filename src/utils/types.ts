@@ -23,10 +23,10 @@ export type User = {
   id: number;
   email: string;
   password: string;
-  planification?: Planification;
+  planning?: planning;
 };
 
-export type Planification = {
+export type planning = {
   [day: string]: Exercise[];
 };
   

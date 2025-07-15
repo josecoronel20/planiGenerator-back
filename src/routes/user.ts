@@ -24,22 +24,22 @@ router.get("/me", async (req, res) => {
   
     if (!user) {
       console.log("Unauthorized: No user");
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json(null);
     }
 
     res.status(200).json(user);
   });
 
   router.put("/update", async (req, res) => {
-    const { id, planification } = req.body;
+    const { id, planning } = req.body;
     const users = await readUser();
     const user = users.find((user) => user.id === id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    user.planification = planification;
+    user.planning = planning;
     await writeUser(users);
-    res.status(200).json({ message: "Planification updated" });
+    res.status(200).json({ message: "planning updated" });
   });
 
   export default router;    
