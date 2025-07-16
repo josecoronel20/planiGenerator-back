@@ -7,8 +7,10 @@ import {
 import { Credentials, CredentialsRegister, User } from "../utils/types";
 import { readCredentials, writeCredentials } from "../utils/credentialHandler";
 import bcrypt from "bcrypt";
+import {PrismaClient} from '../generated/prisma'
 
 const router = Router();
+const prisma = new PrismaClient();
 
 //register
 router.post("/register", async (req, res) => {
@@ -21,25 +23,24 @@ router.post("/register", async (req, res) => {
   const { email, password, username } = req.body as CredentialsRegister;
 
   try {
-    const users = await readCredentials();
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    if (users.some((user) => user.email === email)) {
+    if (existingUser) {
       return res.status(400).json({ message: "El email ya está registrado" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = {
-      id: users.length + 1,
-      email,
-      password: hashedPassword,
-      username,
-      planning:undefined
-    };
 
-    users.push(newUser as User);
-
-    await writeCredentials(users as Credentials[]);
+    await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        username
+      }
+    });
 
     return res
       .status(201)
