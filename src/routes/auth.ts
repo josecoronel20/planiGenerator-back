@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body as Credentials;
 
   try {
-    const users = await readCredentials();
+    const users = await prisma.user.findMany();
 
     const userFinded = users.find((user) => user.email === email);
 
