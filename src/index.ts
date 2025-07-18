@@ -31,7 +31,6 @@ app.use("/auth", auth);
 app.use("/planiGenerator", planiGenerator);
 // Rutas de user
 app.use("/user", user);
-
 app.listen(process.env.PORT, () => {
   console.log(`Servidor corriendo en puerto ${process.env.PORT}`);
 });

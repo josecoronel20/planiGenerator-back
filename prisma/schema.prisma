@@ -39,4 +39,5 @@ model Exercise {
   weight    Float    @default(0)
   dayId     Int
   day       Day      @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
 }

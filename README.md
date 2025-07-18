@@ -28,7 +28,7 @@ type User = {
   username: string;
   email: string;
   password: string;
-  planning?: planning;
+  routine?: routine;
 };
 ```
 
@@ -44,7 +44,7 @@ type Exercise = {
 
 ### Planificación
 ```typescript
-type planning = {
+type routine = {
   [day: string]: Exercise[];
 };
 ```
@@ -152,7 +152,7 @@ try {
 1. **Request** → Middleware (CORS, cookies, body parsing)
 2. **Validation** → Zod schemas
 3. **Authentication** → JWT verification
-4. **Business Logic** → User/planning operations
+4. **Business Logic** → User/routine operations
 5. **Response** → JSON response with status
 
 ---
