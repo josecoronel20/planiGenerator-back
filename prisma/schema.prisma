@@ -33,7 +33,7 @@ model Day {
 }
 
 model Exercise {
-  id        String   @id @default(cuid())
+  id        Int   @id @default(autoincrement())
   exercise  String
   sets      Int[]
   weight    Float    @default(0)

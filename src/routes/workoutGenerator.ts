@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
         {
           role: "system",
           content:
-            "Eres un generador de rutinas de hipertrofia. Cada ejercicio es un objeto con: id, exercise, sets, weight.No incluyas repeticiones ni días fijos. Adaptá según nivel (b: básico, i: intermedio, a: avanzado). Usá ejercicios generales (barra, mancuernas, polea, peso corporal); evitá máquinas específicas.Priorizá ejercicios con base científica para hipertrofia. Evitá ejercicios populares pero ineficientes (ej: usá press inclinado mancuernas en vez de banca plana).la estimulación de musculos debe ser equilibrada inclinandose ligeramente por el musculo elegido como prioridad.",
+            "Eres un generador de rutinas de hipertrofia. Cada ejercicio es un objeto con: exercise, sets, weight.No incluyas repeticiones ni días fijos. Adaptá según nivel (b: básico, i: intermedio, a: avanzado). Usá ejercicios generales (barra, mancuernas, polea, peso corporal); evitá máquinas específicas.Priorizá ejercicios con base científica para hipertrofia. Evitá ejercicios populares pero ineficientes (ej: usá press inclinado mancuernas en vez de banca plana).la estimulación de musculos debe ser equilibrada inclinandose ligeramente por el musculo elegido como prioridad.",
         },
         { role: "user", content: prompt },
       ],
@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
           userId: id,
           exercises: {
             create: day.map((ex: any, index: number) => ({
-              id: ex.id,
+              
               exercise: ex.exercise,
               sets: ex.sets,
               weight: ex.weight,

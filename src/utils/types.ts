@@ -12,7 +12,7 @@ export type CredentialsRegister = {
 };
 
 export type Exercise = {
-  id: string;
+  id: number;
   exercise: string;
   sets: number[];
   weight: number;

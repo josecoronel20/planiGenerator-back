@@ -4,8 +4,7 @@ import {
   credentialsLoginSchema,
   credentialsRegisterSchema,
 } from "../utils/credentialsSchema";
-import { Credentials, CredentialsRegister, User } from "../utils/types";
-import { readCredentials, writeCredentials } from "../utils/credentialHandler";
+import { Credentials, CredentialsRegister } from "../utils/types";
 import bcrypt from "bcrypt";
 import {PrismaClient} from '../generated/prisma'
 
@@ -18,7 +17,7 @@ router.post("/register", async (req, res) => {
   if (zodError) {
     console.log("Register request", req.body, zodError);
     console.log("Validation error", zodError);
-    return res.status(400).json({ message: zodError.message });
+    return res.status(400).json({ message: zodError.errors[0].message });
   }
   const { email, password, username } = req.body as CredentialsRegister;
 
@@ -45,7 +44,7 @@ router.post("/register", async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "Usuario registrado correctamente" });
+      .json({ message: "Usuario creado correctamente" });
   } catch (error) {
     console.log("Error al registrar usuario", error);
     return res.status(500).json({ message: "Error al registrar usuario" });
@@ -57,7 +56,7 @@ router.post("/login", async (req, res) => {
   const { error: zodError } = credentialsLoginSchema.safeParse(req.body);
   if (zodError) {
     console.log("Validation error", zodError);
-    return res.status(400).json({ message: zodError.message });
+    return res.status(400).json({ message: zodError.errors[0].message });
   }
 
   const { email, password } = req.body as Credentials;
@@ -68,15 +67,13 @@ router.post("/login", async (req, res) => {
     const userFinded = users.find((user) => user.email === email);
 
     if (!userFinded) {
-      console.log("Invalid email or password");
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "email o contraseña incorrectos" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, userFinded.password);
 
     if (!isPasswordValid) {
-      console.log("Invalid email or password");
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "email o contraseña incorrectos" });
     }
 
     const token = jwt.sign(
@@ -95,7 +92,7 @@ router.post("/login", async (req, res) => {
     });
     
 
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ message: "Inicio de sesión exitoso" });
   } catch (err) {
     console.log("Login error:", err);
     res.status(500).json({ message: "Internal server error" });
@@ -104,10 +101,7 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", async (req, res) => {
   res.clearCookie("token");
-  console.log("Logout successful");
-  res.status(200).json({ message: "Logout successful" });
+  res.status(200).json({ message: "Cierre de sesión exitoso" });
 });
-
-
 
 export default router;
