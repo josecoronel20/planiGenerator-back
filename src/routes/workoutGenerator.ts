@@ -72,7 +72,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    return response
+    return res.status(200).json(workoutGenerated);
   } catch (error) {
     console.error("Error al generar el plani", error);
     return res
