@@ -4,9 +4,10 @@ import {
   credentialsLoginSchema,
   credentialsRegisterSchema,
 } from "../utils/credentialsSchema";
-import { Credentials, CredentialsRegister } from "../utils/types";
+import { Credentials, CredentialsRegister, User } from "../utils/types";
 import bcrypt from "bcrypt";
-import {PrismaClient} from '../generated/prisma'
+import { PrismaClient } from '@prisma/client';
+
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -64,7 +65,7 @@ router.post("/login", async (req, res) => {
   try {
     const users = await prisma.user.findMany();
 
-    const userFinded = users.find((user) => user.email === email);
+    const userFinded = users.find((user: User) => user.email === email);
 
     if (!userFinded) {
       return res.status(401).json({ message: "email o contraseña incorrectos" });
