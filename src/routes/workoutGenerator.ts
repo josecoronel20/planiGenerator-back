@@ -1,6 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "@prisma/client";
 import OpenAI from "openai";
 import { Workout } from "../utils/types";
 

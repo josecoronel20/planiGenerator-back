@@ -1,7 +1,7 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../utils/types";
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
