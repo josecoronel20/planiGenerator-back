@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "./routes/auth";
-import planiGenerator from "./routes/planiGenerator";
+import workoutGenerator from "./routes/workoutGenerator";
 import user from "./routes/user";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: ["http://localhost:3000"],
     methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type",
+    allowedHeaders: ["Content-Type","Authorization"],
     credentials: true,
   })
 );
@@ -27,8 +27,8 @@ app.use(cookieParser());
 // Rutas
 // Rutas de auth
 app.use("/auth", auth);
-// Rutas de planiGenerator
-app.use("/planiGenerator", planiGenerator);
+// Rutas de workoutGenerator
+app.use("/workoutGenerator", workoutGenerator);
 // Rutas de user
 app.use("/user", user);
 app.listen(process.env.PORT, () => {

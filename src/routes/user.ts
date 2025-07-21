@@ -11,7 +11,7 @@ router.get("/me", async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     console.log("Unauthorized: No token");
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json(null);
   }
   const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
     id: number;
@@ -19,7 +19,7 @@ router.get("/me", async (req, res) => {
 
   if (!decoded) {
     console.log("Unauthorized: No decoded");
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json(null);
   }
 
   const user = await prisma.user.findUnique({
@@ -27,7 +27,7 @@ router.get("/me", async (req, res) => {
       id: decoded.id,
     },
     include: {
-      planning: {
+      workout: {
         include: {
           exercises: {
             orderBy: {
@@ -47,20 +47,20 @@ router.get("/me", async (req, res) => {
   res.status(200).json(user);
 });
 
-router.post("/createPlanning", async (req, res) => {
-    const { id, planning } = req.body;
+router.post("/createWorkout", async (req, res) => {
+    const { id, workout } = req.body;
 
     try {
       const user = await prisma.user.findUnique({ where: { id } });
       if (!user) return res.status(404).json({ message: "User not found" });
 
 
-      //delete previous planning
+      //delete previous workout
       await prisma.day.deleteMany({ where: { userId: id } });
 
-      //create new planning
-      for (let i = 0; i < planning.length; i++) {
-        const day = planning[i];
+      //create new workout
+      for (let i = 0; i < workout.length; i++) {
+        const day = workout[i];
         await prisma.day.create({
           data: {
             dayIndex: i,
@@ -78,10 +78,10 @@ router.post("/createPlanning", async (req, res) => {
         });
       }
 
-      return res.status(200).json({ message: "Planning updated" });
+      return res.status(200).json({ message: "Workout updated" });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Error updating planning" });
+      return res.status(500).json({ message: "Error updating workout" });
     }
   });
 

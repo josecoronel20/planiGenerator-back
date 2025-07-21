@@ -23,7 +23,7 @@ export type User = {
   id: number;
   email: string;
   password: string;
-  routine?: Planning;
+  routine?: Workout;
 };
 
-export type Planning = Exercise[][];
+export type Workout = Exercise[][];
