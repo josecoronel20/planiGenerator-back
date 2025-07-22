@@ -65,7 +65,7 @@ router.post("/login", async (req, res) => {
   try {
     const users = await prisma.user.findMany();
 
-    const userFinded = users.find((user: User) => user.email === email);
+    const userFinded = users.find((user: any) => user.email === email);
 
     if (!userFinded) {
       return res.status(401).json({ message: "email o contraseña incorrectos" });

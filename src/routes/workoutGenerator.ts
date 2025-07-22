@@ -61,7 +61,6 @@ router.post("/", async (req, res) => {
           userId: id,
           exercises: {
             create: day.map((ex: any, index: number) => ({
-              
               exercise: ex.exercise,
               sets: ex.sets,
               weight: ex.weight,
